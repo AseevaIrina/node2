@@ -1,4 +1,4 @@
-const fs = require('fs/promises')
+const fs = require('fs').promises
 const path = require('path')
 const chalk = require('chalk')
 
@@ -40,6 +40,16 @@ async function removeNoteById(id) {
     console.log(chalk.bgRed(`Note with ID ${id} was removed!`))
 }
 
+async function editNoteById(id, title) {
+    const notes = await getNotes()
+    const editedNoteIndex = notes.findIndex(note => note.id === id)
+    notes[editedNoteIndex] = {title: title, id: id}
+    await fs.writeFile(notesPath, JSON.stringify([
+        ...notes
+    ]))
+    console.log(chalk.bgBlue(`Title of note with ID ${id} was edited!`))
+}
+
 module.exports = {
-    addNote, printNotes, removeNoteById
+    addNote, getNotes, removeNoteById, editNoteById
 }
